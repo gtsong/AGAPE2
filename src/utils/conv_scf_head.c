@@ -13,14 +13,14 @@ int main(int argc, char *argv[])
 {
 	FILE *f;
 	char buf[BIG];
-	char next[100];
-	char scf_prefix[100];
-	char scf_name[100];
+	char next[1000];
+	char scf_prefix[1000];
+	char scf_name[1000];
 	int len = 0;
 	int max_scf_num = 0;
 	int len_prefix = 0;
 	int cur_len = 0, cur_num = 0;
-	char scf_len_char[100];
+	char scf_len_char[1000];
 	int count = 0;
 	int *scf_len;
 	int i = 0;
@@ -29,13 +29,16 @@ int main(int argc, char *argv[])
 	strcpy(next, "");
 	strcpy(scf_prefix, "");
 	strcpy(scf_name, "");
-	if( argc != 3 ) {
-		printf("conv_scf_head seq_file primary_prefix\n");
-		return 1;
-	}
+	// if ( argc == 2 ) {
+	len_prefix = 0;
+	// }
+	// else if( argc != 3 ) {
+		// printf("conv_scf_head seq_file primary_prefix\n");
+		// strcpy(scf_prefix, argv[2]);
+		// len_prefix = strlen(scf_prefix);
+		// return EXIT_FAILURE;
+	// }
 
-	strcpy(scf_prefix, argv[2]);
-	len_prefix = strlen(scf_prefix);
 	strcpy(scf_len_char, "UNDEF");
 
 	f = fopen(argv[1], "r");
@@ -63,7 +66,10 @@ int main(int argc, char *argv[])
 			i++;
 
 			if( (sscanf(buf+1, "%s %s %*s", next, scf_len_char) == 2) || (sscanf(buf+1, "%s %*s", next) == 1) ) {
-				if( strstr(next, scf_prefix) ) {
+				if( len_prefix == 0 ) {
+					strcpy(scf_name, next);
+				}
+				else if( strstr(next, scf_prefix) ) {
 					strcpy(scf_name, next+len_prefix);
 					cur_len = strlen(next)-len_prefix;
 					scf_name[cur_len] = '\0';
@@ -72,7 +78,7 @@ int main(int argc, char *argv[])
 					if( cur_num > max_scf_num ) {
 						max_scf_num = cur_num;
 					}
-				}	
+				}
 			}
 			else {
 				printf("bad format in %s\n", buf);
@@ -85,7 +91,7 @@ int main(int argc, char *argv[])
 			else count = count + len;
 		}
 	}
-	if( i >= 0 ) scf_len[i] = count;	
+	if( i >= 0 ) scf_len[i] = count;
 
 	len = 0;
 	cur_num = max_scf_num + 1; 
@@ -96,7 +102,14 @@ int main(int argc, char *argv[])
 		if( buf[0] == '>' ) {
 			strcpy(scf_len_char, "UNDEF");
 			if( (sscanf(buf+1, "%s %s %*s", next, scf_len_char) == 2) || (sscanf(buf+1, "%s %*s", next) == 1) ) {
-				if( strstr(next, scf_prefix) ) {
+				if( len_prefix == 0 ) {
+					if (buf[strlen(buf) - 1] == '\n') buf[strlen(buf) - 1] = '\0';
+					sprintf(scf_name, "%s %d %s", next, scf_len[i], buf+strlen(next)+2);
+					if( scf_len[i] != 0 ) {
+						printf(">%s\n", scf_name);
+					}
+				}
+				else if( strstr(next, scf_prefix) ) {
 					len = strlen(buf);
 					if( buf[len-1] == '\n' ) buf[len-1] = '\0';
 					if( scf_len[i] != 0 ) {
@@ -157,3 +170,5 @@ int is_number(char *str)
 
 	return(res);
 }
+
+

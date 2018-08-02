@@ -183,13 +183,16 @@ int main(int argc, char *argv[])
 					file_type = SINGLE_FQ2;
 				}
 				else {
-					if( version == VERSION1 ) {
-						fprintf(g3, "%s/1\n", name1); 		
+					if( prev_read_num == '1' ) {
+						if( version == VERSION1 ) {
+							fprintf(g3, "%s/1\n", name1); 		
+						}
+						else fprintf(g3, "%s 1:%s\n", name1, part1); 		
+						fprintf(g3, "%s", line1); 		
+						fprintf(g3, "%s", line2); 		
+						fprintf(g3, "%s", line3); 		
 					}
-					else fprintf(g3, "%s 1:%s\n", name1, part1); 		
-					fprintf(g3, "%s", line1); 		
-					fprintf(g3, "%s", line2); 		
-					fprintf(g3, "%s", line3); 		
+
 					if( version == VERSION1 ) {
 						fprintf(g4, "%s/2\n", name2); 		
 					}

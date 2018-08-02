@@ -15,6 +15,11 @@ int main(int argc, char *argv[]) {
 	char source[100];
 	char name1[500], name2[500];
 	bool is_name_given = false;
+	bool is_start_num_given = false;
+	int count = 0;
+	char num[100];
+	int len = 0;
+	int i = 0;
 
 	strcpy(item1, "");
 	strcpy(item2, "");
@@ -23,6 +28,7 @@ int main(int argc, char *argv[]) {
 	strcpy(source, "");
 	strcpy(name1, "");
 	strcpy(name2, "");
+	strcpy(num, "");
  
 	if( argc == 4 ) {
 		is_name_given = true;
@@ -31,6 +37,18 @@ int main(int argc, char *argv[]) {
 		}
 		else if( strcmp(argv[2], "ORF") == 0 ) {
 			is_orf = true;
+		}
+		else if( strcmp(argv[2], "CDS_NUM") == 0 ) {
+			is_cds = true;
+			is_start_num_given = true;
+			strcpy(num, argv[3]);
+			len = strlen(num);	
+			for( i = 0; i < len; i++ ) {
+				if( !isdigit(num[i]) ) {
+					fatalf("%s includes non-digit characters", num);
+				}
+			}
+			count = atoi(argv[3]);	
 		}
 		else {
 			fatal("gff2codex gff_annotation (CDS|ORF)\n");
@@ -73,7 +91,7 @@ int main(int argc, char *argv[]) {
 			else if( strcmp(type, "gene") == 0) 
 			{
 				strcpy(name1, "UNDEF");
-				if(strcmp(source, "SGD") == 0) {
+				if(strcmp(source, "SGD-old-old") == 0) {
 					if( (sscanf(column, "%[^;];%*[^;];%*[^;];%*[^;];%*[^;];%*[^;];%s", item1, item2) != 2) && (sscanf(column, "%[^;];%*[^;];%*[^;];%*[^;];%*[^;];%s", item1, item2) != 2) && (sscanf(column, "%[^;];%*[^;];%*[^;];%*[^;];%s", item1, item2) != 2) && (sscanf(column, "%[^;];%*[^;];%*[^;];%s", item1, item2) != 2) && (sscanf(column, "%[^;];%*[^;];%s", item1, item2) != 2) ) {
 						fatalf("wrong SGD gff column: %s", column);
 					}
@@ -85,11 +103,21 @@ int main(int argc, char *argv[]) {
 						sprintf(gname, "%s;%s", item1, item2);
 					}
 				}
+				else if( strcmp(source, "agape") == 0 ) {
+					if( sscanf(column, "%[^,],%*s", item1) != 1 ) {
+             fatalf("wrong gff column: %s", column);
+					}
+					strcpy(gname, item1);
+				}
 				else strcpy(gname, column);
 
 				if(strand == '+') {
 					if( is_name_given == false ) {
 						printf("> %d %d %s %s\n", b, e, gname, scaf_name);
+					}
+					else if( is_start_num_given == true ) {
+						printf("> %d %d ORF%d %s\n", b, e, count, scaf_name);
+						count++;
 					}
 					else {
 						printf("> %d %d %s %s\n", b, e, argv[3], scaf_name);
@@ -100,15 +128,19 @@ int main(int argc, char *argv[]) {
 					if( is_name_given == false) {
 						printf("< %d %d %s %s\n", b, e, gname, scaf_name);
 					}
+					else if( is_start_num_given == true ) {
+						printf("< %d %d ORF%d %s\n", b, e, count, scaf_name);
+						count++;
+					}
 					else {
 						printf("< %d %d %s %s\n", b, e, argv[3], scaf_name);
 					}
 					if( is_cds == false ) printf("%d %d\n", b, e);
 				}
 			}
-			else if((strcmp(type, "match") == 0) || (strcmp(type, "match_part") == 0) ) {
+			else if((strcmp(type, "match") == 0) || (strcmp(type, "match_part") == 0) || (strcmp(type, "CDS+1k") == 0) ) {
 				strcpy(name1, "UNDEF");
-				if(strcmp(source, "SGD") == 0) {
+				if(strcmp(source, "SGD-old") == 0) {
 					if( (sscanf(column, "%[^;];%*[^;];%*[^;];%*[^;];%*[^;];%*[^;];%s", item1, item2) != 2) && (sscanf(column, "%[^;];%*[^;];%*[^;];%*[^;];%*[^;];%s", item1, item2) != 2) && (sscanf(column, "%[^;];%*[^;];%*[^;];%*[^;];%s", item1, item2) != 2) && (sscanf(column, "%[^;];%*[^;];%*[^;];%s", item1, item2) != 2) && (sscanf(column, "%[^;];%*[^;];%s", item1, item2) != 2) ) {
 						fatalf("wrong SGD gff column: %s", column);
 					}
@@ -122,8 +154,15 @@ int main(int argc, char *argv[]) {
 				else strcpy(gname, column);
 
 				if(strand == '+') {
-					if( is_name_given == false ) {
+					if( strcmp(type, "CDS+1k") == 0 ) {
+						printf("> %d %d %s.%s %s\n", b, e, argv[3], gname, scaf_name);
+					}
+					else if( is_name_given == false ) {
 						printf("> %d %d %s %s\n", b, e, gname, scaf_name);
+					}
+					else if( is_start_num_given == true ) {
+						printf("> %d %d MATCH%d %s\n", b, e, count, scaf_name);
+						count++;
 					}
 					else {
 						printf("> %d %d %s %s\n", b, e, argv[3], scaf_name);
@@ -131,8 +170,15 @@ int main(int argc, char *argv[]) {
 					printf("%d %d\n", b, e);
 				}
 				else {
-					if( is_name_given == false ) {
+					if( strcmp(type, "CDS+1k") == 0 ) {
+						printf("< %d %d %s.%s %s\n", b, e, argv[3], gname, scaf_name);
+					}
+					else if( is_name_given == false ) {
 						printf("< %d %d %s %s\n", b, e, gname, scaf_name);
+					}
+					else if( is_start_num_given == true ) {
+						printf("< %d %d MATCH%d %s\n", b, e, count, scaf_name);
+						count++;
 					}
 					else {
 						printf("< %d %d %s %s\n", b, e, argv[3], scaf_name);
@@ -142,7 +188,7 @@ int main(int argc, char *argv[]) {
 			}
 			else if( strcmp(type, "CDS") == 0) {
 				strcpy(name2, "UNDEF");
-				if(strcmp(source, "SGD") == 0) {
+				if(strcmp(source, "SGD-old") == 0) {
 					if( (sscanf(column, "%[^;];%*[^;];%*[^;];%*[^;];%*[^;];%*[^;];%s", item1, item2) != 2) && (sscanf(column, "%[^;];%*[^;];%*[^;];%*[^;];%*[^;];%s", item1, item2) != 2) && (sscanf(column, "%[^;];%*[^;];%*[^;];%*[^;];%s", item1, item2) != 2) && (sscanf(column, "%[^;];%*[^;];%*[^;];%s", item1, item2) != 2) && (sscanf(column, "%[^;];%*[^;];%s", item1, item2) != 2) ) {
 						fatalf("wrong SGD gff column: %s", column);
 					}

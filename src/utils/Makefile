@@ -1,7 +1,7 @@
 include ../Flags.mk
 DEST=../../bin
 
-PROGS = dna seq_len gff_subset check_Ns common_reads fastq_head separate_fq edit_fq_head filter_protein_db_fasta check_splice_signal filter_gff comp_gffs check_aa dna2aa check_start_stop_seq check_start_stop_codons false_positive_orfs diff_list rm_redun_gff conv_scf_pos non_ref yeast_specific_common common_gene_list common_gene_set update_gff_blastx pull_c merge_gff gff2sim4 gff2codex sum_gff exonerate_gff2sim4 reverse_exon_order sum_all rm_endchar_fq trim_short_contigs  remove_lower_tri_and_diag conv_head extract_pos_info conv_scf_head readnames add_unique_only rm_redun_vcf make_table merge_bed vcf2gd_snp pull_fasta_scaf extract_scaf_codex diff_lines
+PROGS = dna seq_len gff_subset check_Ns common_reads fastq_head separate_fq edit_fq_head filter_protein_db_fasta check_splice_signal filter_gff comp_gffs check_aa dna2aa check_start_stop_seq check_start_stop_codons false_positive_orfs diff_list rm_redun_gff conv_scf_pos non_ref yeast_specific_common common_gene_list common_gene_set update_gff_blastx pull_c merge_gff gff2sim4 gff2codex sum_gff exonerate_gff2sim4 reverse_exon_order sum_all rm_endchar_fq trim_short_contigs  remove_lower_tri_and_diag conv_head extract_pos_info conv_scf_head readnames add_unique_only rm_redun_vcf make_table merge_bed vcf2gd_snp pull_fasta_scaf extract_scaf_codex diff_lines check_len_codex
 
 all : $(PROGS)
 
@@ -87,6 +87,9 @@ pull_c :
 merge_gff :
 	$(CC) $(CFLAGS) merge_gff.c tokens.c util_genes.c util_i.c util.c -o $(DEST)/merge_gff
 
+codex2gff :
+	$(CC) $(CFLAGS) codex2gff.c tokens.c util_genes.c util_i.c util.c -o $(DEST)/codex2gff
+
 gff2sim4 :
 	$(CC) $(CFLAGS) gff2sim4.c util.c -o $(DEST)/gff2sim4
 
@@ -149,3 +152,6 @@ extract_scaf_codex:
 
 diff_lines:
 	$(CC) $(CFLAGS) diff_lines.c util.c -o $(DEST)/diff_lines
+
+check_len_codex:
+	$(CC) $(CFLAGS) check_len_codex.c util.c -o $(DEST)/check_len_codex

@@ -218,7 +218,7 @@ then
 		done
 	fi
 
-	if [ $num_scf_exon_files == 0 ]
+	if [ $num_scf_exon_files -eq 0 ]
 	then
 		echo "" > $out_dir/codex/$chr_name.codex
 	fi

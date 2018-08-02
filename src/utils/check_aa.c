@@ -5,6 +5,7 @@
 #include "util_i.h"
 
 char compl[128];
+bool last_column_print;
 
 void print_genes(int b, int e, struct g_list *genes, int num_genes, struct exons_list *exons, int num_exons, char *type, int shift_b, int shift_e, bool is_internal_stops);
 
@@ -26,9 +27,14 @@ int main(int argc, char **argv) {
 	int shift_b = 0, shift_e = 0;
 	bool is_internal_stops = false;
 
+	last_column_print = false;
+
 	if( argc == 4 ) {
 		if(strcmp(argv[3], "INTERNAL_STOPS") == 0) {
 			is_internal_stops = true;	
+		}
+		else if(strcmp(argv[3], "LAST_COLUMN") == 0) {
+			last_column_print = true;
 		}
 		else 
 			fatalf("args: gff dna");
@@ -219,15 +225,18 @@ void print_genes(int b, int e, struct g_list *genes, int num_genes, struct exons
 				strcpy(column, genes[i].gname);
 				strcpy(gname, genes[i].gname);			
 			}
+			else if ( last_column_print == true ) {
+				strcpy(gname, genes[i].gname);			
+			}
 			else {
 				strcpy(gname, "UNDEF");
 			}
 
 			if( strcmp(cur_type, "gene") == 0 ) {
-     		printf("%s maker gene %d %d . %c . %s\n", genes[i].sname, genes[i].txStart, genes[i].txEnd, genes[i].strand, gname);
+     		printf("%s agape gene %d %d . %c . %s\n", genes[i].sname, genes[i].txStart, genes[i].txEnd, genes[i].strand, gname);
 			}	
 			else if( strcmp(cur_type, "match") == 0 ) {
-     		printf("%s maker match %d %d . %c . %s\n", genes[i].sname, genes[i].txStart, genes[i].txEnd, genes[i].strand, gname);
+     		printf("%s agape match %d %d . %c . %s\n", genes[i].sname, genes[i].txStart, genes[i].txEnd, genes[i].strand, gname);
 			}
 			else {
 				fatalf("unknown type: %s\n", type);
@@ -242,30 +251,30 @@ void print_genes(int b, int e, struct g_list *genes, int num_genes, struct exons
 				
 				if( (j == genes[i].cdsStart) && (j == genes[i].cdsEnd) ) {
 					if( genes[i].strand == '+' ) {
-						printf("%s maker CDS %d %d . %c . %s\n", genes[i].sname, exons[j].reg.lower+shift_b, exons[j].reg.upper-shift_e, genes[i].strand, gname);
+						printf("%s agape CDS %d %d . %c . %s\n", genes[i].sname, exons[j].reg.lower+shift_b, exons[j].reg.upper-shift_e, genes[i].strand, gname);
 					}
 					else {
-						printf("%s maker CDS %d %d . %c . %s\n", genes[i].sname, exons[j].reg.lower+shift_e, exons[j].reg.upper-shift_b, genes[i].strand, gname);
+						printf("%s agape CDS %d %d . %c . %s\n", genes[i].sname, exons[j].reg.lower+shift_e, exons[j].reg.upper-shift_b, genes[i].strand, gname);
 					}
 				}
 				else if( j == genes[i].cdsStart ) {
 					if( genes[i].strand == '+' ) {
-						printf("%s maker CDS %d %d . %c . %s\n", genes[i].sname, exons[j].reg.lower+shift_b, exons[j].reg.upper, genes[i].strand, gname);
+						printf("%s agape CDS %d %d . %c . %s\n", genes[i].sname, exons[j].reg.lower+shift_b, exons[j].reg.upper, genes[i].strand, gname);
 					}
 					else {
-						printf("%s maker CDS %d %d . %c . %s\n", genes[i].sname, exons[j].reg.lower, exons[j].reg.upper-shift_b, genes[i].strand, gname);
+						printf("%s agape CDS %d %d . %c . %s\n", genes[i].sname, exons[j].reg.lower, exons[j].reg.upper-shift_b, genes[i].strand, gname);
 					}
 				}
 				else if( j == genes[i].cdsEnd ) {
 					if( genes[i].strand == '+' ) {
-						printf("%s maker CDS %d %d . %c . %s\n", genes[i].sname, exons[j].reg.lower, exons[j].reg.upper-shift_e, genes[i].strand, gname);
+						printf("%s agape CDS %d %d . %c . %s\n", genes[i].sname, exons[j].reg.lower, exons[j].reg.upper-shift_e, genes[i].strand, gname);
 					}
 					else {
-						printf("%s maker CDS %d %d . %c . %s\n", genes[i].sname, exons[j].reg.lower+shift_e, exons[j].reg.upper, genes[i].strand, gname);
+						printf("%s agape CDS %d %d . %c . %s\n", genes[i].sname, exons[j].reg.lower+shift_e, exons[j].reg.upper, genes[i].strand, gname);
 					}
 				}
 				else {
-					printf("%s maker CDS %d %d . %c . %s\n", genes[i].sname, exons[j].reg.lower, exons[j].reg.upper, genes[i].strand, gname);
+					printf("%s agape CDS %d %d . %c . %s\n", genes[i].sname, exons[j].reg.lower, exons[j].reg.upper, genes[i].strand, gname);
 				}
 			}
 		}

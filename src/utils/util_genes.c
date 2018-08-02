@@ -557,7 +557,7 @@ int input_genes_in_gff(FILE *f, struct g_list *genes, struct exons_list *exons)
 				}
 
 				strcpy(genes[i].sname, scf_name);
-				if( strcmp(source, "SGD") == 0 ) {
+				if( strcmp(source, "SGD-old") == 0 ) {
 					strcpy(column, gname);
           if( (sscanf(column, "%[^;];%*[^;];%*[^;];%*[^;];%*[^;];%*[^;];%s", item1, item2) != 2) && (sscanf(column, "%[^;];%*[^;];%*[^;];%*[^;];%*[^;];%s", item1, item2) != 2) && (sscanf(column, "%[^;];%*[^;];%*[^;];%*[^;];%s", item1, item2) != 2) && (sscanf(column, "%[^;];%*[^;];%*[^;];%s", item1, item2) != 2) && (sscanf(column, "%[^;];%*[^;];%s", item1, item2) != 2) ) {
             fatalf("wrong SGD gff column: %s", column);
@@ -596,7 +596,7 @@ int input_genes_in_gff(FILE *f, struct g_list *genes, struct exons_list *exons)
 				old_e = e;
       }
       else if( strcmp(type, "CDS") == 0 ) {
-				if( strcmp(source, "SGD") == 0 ) {
+				if( strcmp(source, "SGD-old-old") == 0 ) {
 					strcpy(column, gname);
 
           if( (sscanf(column, "%[^;];%*[^;];%*[^;];%*[^;];%*[^;];%*[^;];%s", item1, item2) != 2) && (sscanf(column, "%[^;];%*[^;];%*[^;];%*[^;];%*[^;];%s", item1, item2) != 2) && (sscanf(column, "%[^;];%*[^;];%*[^;];%*[^;];%s", item1, item2) != 2) && (sscanf(column, "%[^;];%*[^;];%*[^;];%s", item1, item2) != 2) && (sscanf(column, "%[^;];%*[^;];%s", item1, item2) != 2) ) {

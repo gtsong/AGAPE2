@@ -1,6 +1,6 @@
 #!/bin/sh
 
-AGAPE_DIR=/srv/gs1/projects/cherry/giltae/AGAPE
+AGAPE_DIR=/home/ubuntu/AGAPE ###
 REF_NAME=yeast
 CFG_DIR=$AGAPE_DIR/cfg_files
 PROTEIN1=$CFG_DIR/yeast_protein.fasta # reference proteins in FASTA
@@ -13,19 +13,21 @@ REF_DIR=$AGAPE_DIR/reference
 REF_FASTA=$REF_DIR/$REF_NAME.fasta
 REF_GFF=$REF_DIR/$REF_NAME.gff
 
-ABYSS=/srv/gs1/projects/cherry/apps/abyss/bin
-SGA=$AGAPE_DIR/programs/SGA/bin
-SGA_src=$AGAPE_DIR/programs/SGA/sga-master/src/bin
-BLAST=$AGAPE_DIR/programs/BLAST/bin
-axtChainNet=$AGAPE_DIR/programs/axtChainNet
-AUGUSTUS=$AGAPE_DIR/programs/augustus/augustus.2.5/bin
+ABYSS=/usr/lib  ###
+SGA=$AGAPE_DIR/programs/SGA/bin ###
+SGA_src=$AGAPE_DIR/programs/SGA/src/bin ###
+BLAST=/usr/bin ###
+axtChainNet=$AGAPE_DIR/programs/axtChainNet ###
+AUGUSTUS=$AGAPE_DIR/programs/augustus/bin ###
 AUGUSTUS_REF=saccharomyces # check SPECIES.list
-MAKER=/srv/gs1/projects/cherry/apps/maker/bin
-SNAP=/srv/gs1/projects/cherry/apps/SNAP/snap
-GeneMark=/srv/gs1/projects/cherry/apps/GeneMark_S/genemark_suite_linux_64/gmsuite/gmsn.pl
-genemark_mod=/srv/gs1/projects/cherry/giltae/strains/GeneMark_model/GeneMark_hmm.mod 
-BWA=/srv/gs1/projects/cherry/apps/bwa-0.6.2
-SAMTOOLS=/srv/gs1/projects/cherry/apps/samtools-0.1.18
-BEDTOOLS=/srv/gs1/projects/cherry/apps/BEDTools/BEDTools-Version-2.16.2/bin
+MAKER=/home/ubuntu/AGAPE/programs/maker/bin ###
+SNAP=/usr/bin ###
+GeneMark=/home/ubuntu/AGAPE/programs/gm_et_linux_64/gmes_petap/gmsn.pl ###
+genemark_mod=/home/ubuntu/AGAPE/programs/gm_et_linux_64/gmes_petap/GeneMark_hmm.mod ###
+BWA=/usr/bin ###
+SAMTOOLS=/usr/bin ###
+BEDTOOLS=/usr/bin ###
 
 BIN=$AGAPE_DIR/bin
+QUOTA=$AGAPE_DIR/programs/quota-alignment
+SGD=$AGAPE_DIR/programs/sequence_format

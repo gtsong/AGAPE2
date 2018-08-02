@@ -2,10 +2,6 @@
 
 # --- input file in $out_dir/$out_name.scf.fasta ---
 
-#SCRIPTS=/srv/gs1/projects/cherry/giltae/AGAPE # AGAPE main directory path
-#SCRIPT=`echo $0 | sed -e 's;.*/;;'` # script name from command line; path removed for msgs
-
-#fastq_dir=/srv/gs1/projects/cherry/giltae/AGAPE/output/fastq
 
 if [ $# -ne 4 ]
 then
@@ -49,8 +45,6 @@ mkdir -p $comb_annot
 
 cd $comb_annot
 $SCRIPTS/run_comb_annot.sh $comb_annot $BLAST $out_name $maker_dir $out_dir $snap_dir $SCRIPTS
-
 $SCRIPTS/final_annot.sh $out_dir/maker/seq.fasta $comb_annot/gff/$out_name.genes.gff $comb_annot $out_name $SCRIPTS  
-
-# The results are $comb_annot/$out_name.gff
-# BLASTX output file is $comb_annot/blast_out/$out_name.blastx.out
+$SCRIPTS/sort_gff.py $comb_annot/gff/$out_name.gff > $comb_annot/gff/$out_name.gff.sorted
+$SCRIPTS/run_process.sh $out_name $out_dir $seq $SCRIPTS

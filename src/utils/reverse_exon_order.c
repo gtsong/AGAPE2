@@ -8,7 +8,7 @@ int main(int argc, char *argv[])
 	int **exons;
 	int num_exons = 0, max_num_exons = 0;
 	int i = 0;
-	bool is_prev_reverse = false;
+	bool is_first = true;
 
 	strcpy(buf, "");
 	if( argc != 2 ) {
@@ -48,35 +48,25 @@ int main(int argc, char *argv[])
 
 	while(fgets(buf, 10000, f))
 	{
-		if(buf[0] == '<') {
-			if( is_prev_reverse == true ) print_exons_reverse(exons, num_exons);
+		if( (buf[0] == '>') || (buf[0] == '<') ) {
+			if( is_first == false ) print_exons_reverse(exons, num_exons);
 			printf("%s", buf);
-			num_exons = 0;
-			is_prev_reverse = true;
-		}
-		else if( buf[0] == '>' ) {
-			if( is_prev_reverse == true ) print_exons_reverse(exons, num_exons);
-			is_prev_reverse = false;
-			printf("%s", buf);
-			num_exons = 0;
-		}
+			num_exons = 0;	
+			is_first = false;
+		} 
 		else {
-			if( is_prev_reverse == true ) {
-				if( num_exons >= max_num_exons ) {
-					fatalf("error: %d exceeds max_num\n", num_exons);
-				}
+			if( num_exons >= max_num_exons ) {
+				fatalf("error: %d exceeds max_num\n", num_exons);
+			}
 
-				if( sscanf(buf, "%d %d %*s", &exons[num_exons][0], &exons[num_exons][1]) != 2 ) {
-					fatalf("format error: %s", buf);
-				}
-				num_exons++;
+			if( sscanf(buf, "%d %d %*s", &exons[num_exons][0], &exons[num_exons][1]) != 2 ) {
+				fatalf("format error: %s", buf);
 			}
-			else {
-				printf("%s", buf);
-			}
-		}	
+			num_exons++;
+		}
 	}
-	if( is_prev_reverse == true ) print_exons_reverse(exons, num_exons);
+
+	print_exons_reverse(exons, num_exons);
 
 	for( i = 0; i < max_num_exons; i++ ) {
 		free(exons[i]);
@@ -95,7 +85,14 @@ void print_exons_reverse(int **exons, int num_exons)
 {
 	int i = 0;
 
-	if( exons[num_exons-1][1] < exons[0][0] ) {
+
+	if( num_exons <= 0 ) {
+		printf("No exons\n");
+	}
+	else if( num_exons == 1 ) {
+		printf("%d %d\n", exons[0][0], exons[0][1]);
+	}
+	else if( exons[1][0] < exons[0][0] ) {
 		for( i = num_exons-1; i >= 0; i-- ) {
 			printf("%d %d\n", exons[i][0], exons[i][1]);
 		}
