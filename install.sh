@@ -68,32 +68,33 @@ git clone https://github.com/adamlabadorf/ucsc_tools.git
 git clone https://github.com/chapmanb/bcbb.git
 git clone https://github.com/tanghaibao/quota-alignment.git
 
-mv -f quota-alignment/ AGAPE2/programs
-mv AGAPE2/programs/*.py quota-alignment/scripts/
+mv -f quota-alignment/ programs
+mv programs/*.py programs/quota-alignment/scripts/
+
 cd bcbb/gff
 python setup.py build
 sudo python setup.py install
 cd ../..
-mv -f bcbb AGAPE2/programs
+mv -f bcbb programs
 
 # sga
-mv -f sga AGAPE2/programs/sga
+mv -f sga programs/sga
 
 # axtChainNet
 unzip axtChainNet.zip -d axtChainNet
-mv -f axtChainNet AGAPE2/programs/axtChainNet
+mv -f axtChainNet programs/axtChainNet
 
 # faSize
-mv -f ucsc_tools/executables/faSize AGAPE2/programs/axtChainNet
+mv -f ucsc_tools/executables/faSize programs/axtChainNet
 
 # genemark
-tar xvzf AGAPE2/download/gm_et_linux_64.tar.gz
+tar xvzf download/gm_et_linux_64.tar.gz
 cp gm_et_linux_64/gmes_petap/gm_key ~/.gm_key
-mv gm_et_linux_64 AGAPE2/programs/gm_et_linux_64
+mv gm_et_linux_64 programs/gm_et_linux_64
 
 # gmhmmp & gmsn.pl
-mv -f nanoscope/sw/src/quast-2.3/libs/genemark/linux_64/gmhmmp AGAPE2/programs/gm_et_linux_64/gmes_petap
-mv -f nanoscope/sw/src/quast-2.3/libs/genemark/linux_64/gmsn.pl AGAPE2/programs/gm_et_linux_64/gmes_petap
+mv -f nanoscope/sw/src/quast-2.3/libs/genemark/linux_64/gmhmmp programs/gm_et_linux_64/gmes_petap
+mv -f nanoscope/sw/src/quast-2.3/libs/genemark/linux_64/gmsn.pl programs/gm_et_linux_64/gmes_petap
 
 # gff2zff.pl
 chmod 775 thesis/src/gene_prediction/gff2zff.pl
@@ -107,7 +108,7 @@ sudo cp ncbi-rmblastn-2.2.28/bin/rmblastn /usr/bin
 # RepeatMasker
 tar xvzf RepeatMasker-open-4-0-7.tar.gz
 sudo cp -r RepeatMasker /usr/local/RepeatMasker
-mv -f RepeatMasker AGAPE2/programs/RepeatMasker
+mv -f RepeatMasker programs/RepeatMasker
 
 # trf
 chmod a+x trf409.linux64
@@ -121,7 +122,7 @@ make
 cd src
 make
 cd ../..
-mv -f augustus-3.3.1 AGAPE2/programs/augustus
+mv -f augustus-3.3.1 programs/augustus
 
 # maker
 tar xvzf maker-2.31.9.tgz
@@ -130,24 +131,24 @@ perl ./Build.PL
 ./Build installdeps # enter Yes at local installation
 ./Build install
 cd ../..
-mv -f maker AGAPE2/programs/maker
+mv -f maker programs/maker
 
-mv -f AGAPE2/GeneMark_hmm.mod AGAPE2/programs/gm_et_linux_64/gmes_petap/GeneMark_hmm.mod
+mv -f GeneMark_hmm.mod programs/gm_et_linux_64/gmes_petap/GeneMark_hmm.mod
 
-chmod 775 AGAPE2/configs.cf
-chmod 775 AGAPE2/cfg_files/maker_exe.ctl
-chmod 775 AGAPE2/programs/gm_et_linux_64/gmes_petap/GeneMark_hmm.mod
-chmod 775 AGAPE2/cfg_files/*
-chmod 775 AGAPE2/src/utils/*
+chmod 775 configs.cf
+chmod 775 cfg_files/maker_exe.ctl
+chmod 775 programs/gm_et_linux_64/gmes_petap/GeneMark_hmm.mod
+chmod 775 cfg_files/*
+chmod 775 src/utils/*
 
-dos2unix AGAPE2/agape_annot.sh
-dos2unix AGAPE2/combined_annot.sh
-dos2unix AGAPE2/final_annot.sh
-dos2unix AGAPE2/intervals.sh
-dos2unix AGAPE2/non_ref.sh
-dos2unix AGAPE2/run_comb_annot.sh
+dos2unix agape_annot.sh
+dos2unix combined_annot.sh
+dos2unix final_annot.sh
+dos2unix intervals.sh
+dos2unix non_ref.sh
+dos2unix run_comb_annot.sh
 
 rm -f axtChainNet.zip augustus.current.tar.gz RepeatMasker-open-4-0-7.tar.gz ncbi-rmblastn-2.2.28-x64-linux.tar.gz maker-2.31.9.tgz
 rm -rf nanoscope thesis ncbi-rmblastn-2.2.28 ucsc_tools
 rm -f install.shg
-rm -rf AGAPE2/download
+rm -rf download
