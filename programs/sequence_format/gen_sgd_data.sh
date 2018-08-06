@@ -1,6 +1,6 @@
 #!/bin/sh -l
 
-utils_dir=/home/ubuntu/AGAPE/programs/sequence_format/utils.d
+utils_dir=/home/ubuntu/AGAPE2/programs/sequence_format/utils.d
 
 strain_name=$1
 out_dir=$2
