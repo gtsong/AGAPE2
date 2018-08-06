@@ -1,6 +1,6 @@
 #!/bin/sh
 
-AGAPE_DIR=/home/ubuntu/AGAPE ###
+AGAPE_DIR=/home/ubuntu/AGAPE2 ###
 REF_NAME=yeast
 CFG_DIR=$AGAPE_DIR/cfg_files
 PROTEIN1=$CFG_DIR/yeast_protein.fasta # reference proteins in FASTA
