@@ -125,9 +125,14 @@ make
 cd ../..
 mv -f augustus-3.3.1 programs/augustus
 
-# maker
+# maker [Error happen, but doesn't matter]
 tar xvzf maker-2.31.9.tgz
-# need additional install after RepeatMasker.
+cd maker/src
+perl ./Build.PL
+./Build installdeps # enter Yes at local installation
+./Build install
+cd ../..
+mv -f maker programs/maker
 
 mv -f GeneMark_hmm.mod programs/gm_et_linux_64/gmes_petap/GeneMark_hmm.mod
 
