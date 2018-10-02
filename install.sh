@@ -29,10 +29,10 @@ sudo cpanm -n Bit::Vector
 sudo cpanm -n Inline::C
 sudo cpanm -n IO::All
 sudo cpanm -n IO::Prompt
-sudo cpanm -n DBD::Pg
 sudo cpanm -n Bio::SeqIO
 sudo cpanm -n Text::Soundex
 sudo cpanm -n LWP::Simple
+sudo cpanm -n DBD::Pg
 
 sudo apt-get install -y abyss
 sudo apt-get install -y bwa
@@ -109,6 +109,7 @@ sudo cp ncbi-rmblastn-2.2.28/bin/rmblastn /usr/bin
 tar xvzf RepeatMasker-open-4-0-7.tar.gz
 sudo cp -r RepeatMasker /usr/local/RepeatMasker
 mv -f RepeatMasker programs/RepeatMasker
+# need additional install directly
 
 # trf
 chmod a+x trf409.linux64
@@ -126,12 +127,7 @@ mv -f augustus-3.3.1 programs/augustus
 
 # maker
 tar xvzf maker-2.31.9.tgz
-cd maker/src
-perl ./Build.PL
-./Build installdeps # enter Yes at local installation
-./Build install
-cd ../..
-mv -f maker programs/maker
+# need additional install after RepeatMasker.
 
 mv -f GeneMark_hmm.mod programs/gm_et_linux_64/gmes_petap/GeneMark_hmm.mod
 
@@ -145,7 +141,6 @@ dos2unix agape_annot.sh
 dos2unix combined_annot.sh
 dos2unix final_annot.sh
 dos2unix intervals.sh
-dos2unix non_ref.sh
 dos2unix run_comb_annot.sh
 
 rm -f axtChainNet.zip augustus.current.tar.gz RepeatMasker-open-4-0-7.tar.gz ncbi-rmblastn-2.2.28-x64-linux.tar.gz maker-2.31.9.tgz
