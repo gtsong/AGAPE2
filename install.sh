@@ -38,7 +38,6 @@ sudo apt-get install -y abyss
 sudo apt-get install -y bwa
 sudo apt-get install -y libsparsehash-dev
 sudo apt-get install -y cmake
-sudo apt-get install -y bamtools
 sudo apt-get install -y bedtools
 sudo apt-get install -y samtools
 sudo apt-get install -y zlib1g-dev
@@ -49,6 +48,7 @@ sudo apt-get install -y cd-hit
 sudo apt-get install -y exonerate
 sudo apt-get install -y snap
 
+sudo apt-get install -y libjsoncpp-dev
 sudo apt-get install -y libpq-dev
 sudo apt-get install -y libdbd-pg-perl
 sudo apt-get install -y postgresql
@@ -67,6 +67,7 @@ git clone https://github.com/hyphaltip/thesis.git
 git clone https://github.com/adamlabadorf/ucsc_tools.git
 git clone https://github.com/chapmanb/bcbb.git
 git clone https://github.com/tanghaibao/quota-alignment.git
+git clone https://github.com/pezmaster31/bamtools.git
 
 mv -f quota-alignment/ programs
 mv programs/*.py programs/quota-alignment/scripts/
@@ -115,6 +116,14 @@ mv -f RepeatMasker programs/RepeatMasker
 chmod a+x trf409.linux64
 sudo ln -s trf409.linux64 /usr/local/RepeatMasker
 sudo mv -f trf409.linux64 /usr/local/bin
+
+#bamtools
+cd bamtools
+mkdir build
+cd build
+cmake ..
+make 
+sudo make install
 
 # augustus
 tar xvzf augustus.current.tar.gz
