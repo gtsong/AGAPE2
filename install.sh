@@ -71,7 +71,7 @@ git clone https://github.com/adamlabadorf/ucsc_tools.git
 git clone https://github.com/chapmanb/bcbb.git
 git clone https://github.com/tanghaibao/quota-alignment.git
 git clone https://github.com/pezmaster31/bamtools.git
-git clone https://github.com/madler/zlib
+git clone https://github.com/madler/zlib.git
 git clone https://github.com/WardF/libbzip2.git
 git clone https://github.com/kobolabs/liblzma.git
 
@@ -85,6 +85,12 @@ cd ../..
 mv -f bcbb programs
 
 # sga
+cd sga/src
+sudo ./autogen.sh
+./configure --with-bamtools=/usr/local
+make
+sudo make install
+cd ../..
 mv -f sga programs/sga
 
 # axtChainNet
