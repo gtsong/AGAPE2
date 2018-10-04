@@ -136,7 +136,7 @@ cd build
 cmake ..
 make 
 sudo make install
-cd ..
+cd ../..
 mv -f bamtools programs/bamtools
 
 cd libbzip2
