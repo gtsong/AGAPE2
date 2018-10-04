@@ -39,7 +39,7 @@ sudo apt-get install -y bwa
 sudo apt-get install -y libsparsehash-dev
 sudo apt-get install -y cmake
 sudo apt-get install -y bedtools
-sudo apt-get install -y samtools
+#sudo apt-get install -y samtools
 sudo apt-get install -y zlib1g-dev
 sudo apt-get install -y automake
 sudo apt-get install -y libboost-all-dev
@@ -60,6 +60,9 @@ wget http://www.repeatmasker.org/RepeatMasker-open-4-0-7.tar.gz
 wget ftp://ftp.ncbi.nlm.nih.gov/blast/executables/rmblast/2.2.28/ncbi-rmblastn-2.2.28-x64-linux.tar.gz
 wget http://tandem.bu.edu/trf/downloads/trf409.linux64
 wget http://yandell.topaz.genetics.utah.edu/maker_downloads/1726/7524/8A1A/D9715052FF2398BC5D70137483B6/maker-2.31.9.tgz
+wget https://github.com/samtools/samtools/releases/download/1.3/samtools-1.3.tar.bz2
+wget https://github.com/samtools/bcftools/releases/download/1.3/bcftools-1.3.tar.bz2
+wget https://github.com/samtools/htslib/releases/download/1.3/htslib-1.3.tar.bz2
 
 git clone https://github.com/jts/sga.git
 git clone https://github.com/kuleshov/nanoscope.git
@@ -68,6 +71,9 @@ git clone https://github.com/adamlabadorf/ucsc_tools.git
 git clone https://github.com/chapmanb/bcbb.git
 git clone https://github.com/tanghaibao/quota-alignment.git
 git clone https://github.com/pezmaster31/bamtools.git
+git clone https://github.com/madler/zlib
+git clone https://github.com/WardF/libbzip2.git
+git clone https://github.com/kobolabs/liblzma.git
 
 mv -f quota-alignment/ programs
 mv programs/*.py programs/quota-alignment/scripts/
@@ -127,13 +133,59 @@ sudo make install
 cd ..
 mv -f bamtools programs/bamtools
 
-# augustus
+cd libbzip2
+sudo make install
+cd ..
+mv -f libbzip2 programs/libbzip2
+
+cd liblzma
+./configure
+make
+sudo make install
+cd ..
+mv -f liblzma programs/liblzma
+
+cd zlib
+./configure
+make test
+sudo make install
+cd ..
+mv -f zlib programs/zlib
+
+tar -xjvf htslib-1.3.tar.bz2
+cd htslib-1.3
+autoheader
+autoconf
+./configure
+make
+sudo make install
+cd ..
+mv -f htslib-1.3 programs/htslib-1.3
+
+tar -xjvf bcftools-1.3.tar.bz2
+cd bcftools-1.3
+make
+sudo make install
+cd ..
+mv -f bcftools-1.3 programs/bcftools-1.3
+
+tar -xjvf samtools-1.3.tar.bz2
+cd samtools-1.3
+autoheader                 
+autoconf -Wno-syntax 
+./configure           
+make
+sudo make install
+cd ..
+mv -f samtools-1.3 programs/samtools-1.3
+
+# augustus (before running, you have to change some Makefile, if not error happen, but it does work. check INSTALL)
 tar xvzf augustus.current.tar.gz
-cd augustus-3.3.1
-make
-cd src
-make
-cd ../..
+# cd augustus-3.3.1
+# make
+# cd src
+# make
+# cd ../..
 mv -f augustus-3.3.1 programs/augustus
 
 # maker [Error happen, but doesn't matter]
