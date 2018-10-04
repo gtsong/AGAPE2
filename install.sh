@@ -39,7 +39,7 @@ sudo apt-get install -y bwa
 sudo apt-get install -y libsparsehash-dev
 sudo apt-get install -y cmake
 sudo apt-get install -y bedtools
-#sudo apt-get install -y samtools
+sudo apt-get install -y libncurses5-dev libncursesw5-dev
 sudo apt-get install -y zlib1g-dev
 sudo apt-get install -y automake
 sudo apt-get install -y libboost-all-dev
@@ -218,6 +218,6 @@ dos2unix intervals.sh
 dos2unix run_comb_annot.sh
 
 rm -f axtChainNet.zip augustus.current.tar.gz RepeatMasker-open-4-0-7.tar.gz ncbi-rmblastn-2.2.28-x64-linux.tar.gz maker-2.31.9.tgz
-rm -rf nanoscope thesis ncbi-rmblastn-2.2.28 ucsc_tools
-rm -f install.shg
+rm -rf nanoscope thesis ncbi-rmblastn-2.2.28 ucsc_tools 
+rm -f install.shg bcftools-1.3.tar.bz2 htslib-1.3.tar.bz2 samtools-1.3.tar.bz2
 rm -rf download
