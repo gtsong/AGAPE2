@@ -124,6 +124,8 @@ cd build
 cmake ..
 make 
 sudo make install
+cd ..
+mv -f bamtools programs/bamtools
 
 # augustus
 tar xvzf augustus.current.tar.gz
