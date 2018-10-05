@@ -1,7 +1,6 @@
 #!/bin/bash
-# Sometimes error happens due to updated version of programs.
+# Sometimes error happens due to updated version of programs and changed directory.
 # check error and change program version.
-
 sudo dpkg --add-architecture i386
 
 sudo apt-get update -y
@@ -47,7 +46,6 @@ sudo apt-get install -y ncbi-blast+
 sudo apt-get install -y cd-hit
 sudo apt-get install -y exonerate
 sudo apt-get install -y snap
-
 sudo apt-get install -y libjsoncpp-dev
 sudo apt-get install -y libpq-dev
 sudo apt-get install -y libdbd-pg-perl
@@ -78,13 +76,28 @@ git clone https://github.com/kobolabs/liblzma.git
 mv -f quota-alignment/ programs
 mv programs/*.py programs/quota-alignment/scripts/
 
+# NOTE
+# All installation is executed in AGAPE2 folder and moved to other directory.
+# If want to move your directory, you have to change dircetory yourself.
+
+#bcbb installation
 cd bcbb/gff
 python setup.py build
 sudo python setup.py install
 cd ../..
 mv -f bcbb programs
 
-# sga
+#bamtools installation
+cd bamtools
+mkdir build
+cd build
+cmake ..
+make 
+sudo make install
+cd ../..
+mv -f bamtools programs/bamtools
+
+# sga installation
 cd sga/src
 sudo ./autogen.sh
 ./configure --with-bamtools=/usr/local
@@ -93,7 +106,7 @@ sudo make install
 cd ../..
 mv -f sga programs/sga
 
-# axtChainNet
+# axtChainNet 
 unzip axtChainNet.zip -d axtChainNet
 mv -f axtChainNet programs/axtChainNet
 
@@ -118,27 +131,12 @@ tar zxvf ncbi-rmblastn-2.2.28-x64-linux.tar.gz
 chmod 775 ncbi-rmblastn-2.2.28/bin/rmblastn
 sudo cp ncbi-rmblastn-2.2.28/bin/rmblastn /usr/bin
 
-# RepeatMasker
-tar xvzf RepeatMasker-open-4-0-7.tar.gz
-sudo cp -r RepeatMasker /usr/local/RepeatMasker
-mv -f RepeatMasker programs/RepeatMasker
-# need additional install directly
-
 # trf
 chmod a+x trf409.linux64
 sudo ln -s trf409.linux64 /usr/local/RepeatMasker
 sudo mv -f trf409.linux64 /usr/local/bin
 
-#bamtools
-cd bamtools
-mkdir build
-cd build
-cmake ..
-make 
-sudo make install
-cd ../..
-mv -f bamtools programs/bamtools
-
+# libbzip2, liblzma, zlib installation (htslib dependency)
 cd libbzip2
 sudo make install
 cd ..
@@ -158,6 +156,7 @@ sudo make install
 cd ..
 mv -f zlib programs/zlib
 
+#htslib-1.3 installation
 tar -xjvf htslib-1.3.tar.bz2
 cd htslib-1.3
 autoheader
@@ -168,6 +167,7 @@ sudo make install
 cd ..
 mv -f htslib-1.3 programs/htslib-1.3
 
+#bcftools-1.3 installation
 tar -xjvf bcftools-1.3.tar.bz2
 cd bcftools-1.3
 make
@@ -175,6 +175,7 @@ sudo make install
 cd ..
 mv -f bcftools-1.3 programs/bcftools-1.3
 
+#samtools-1.3 installation
 tar -xjvf samtools-1.3.tar.bz2
 cd samtools-1.3
 autoheader                 
@@ -185,7 +186,7 @@ sudo make install
 cd ..
 mv -f samtools-1.3 programs/samtools-1.3
 
-# augustus (before running, you have to change some Makefile. you should change if directory not matched)
+# augustus (before running, you have to change three Makefiles. you should change it if directory does not matched )
 tar xvzf augustus.current.tar.gz
 
 sed -i '10 a BAMTOOLS=/usr/local' augustus-3.3.1/auxprogs/bam2hints/Makefile
@@ -209,6 +210,12 @@ sudo make install
 cd ..
 mv -f augustus-3.3.1 programs/augustus
 
+# RepeatMasker installation
+# Check INSTALL file to complete installation
+tar xvzf RepeatMasker-open-4-0-7.tar.gz
+sudo cp -r RepeatMasker /usr/local/RepeatMasker
+mv -f RepeatMasker programs/RepeatMasker
+
 # maker [Error happen, but doesn't matter]
 tar xvzf maker-2.31.9.tgz
 cd maker/src
@@ -219,6 +226,12 @@ cd ../..
 mv -f maker programs/maker
 
 mv -f GeneMark_hmm.mod programs/gm_et_linux_64/gmes_petap/GeneMark_hmm.mod
+
+#AGAPE/src installation
+sed -i '31 s/-Werror //g' src/lastz/src/Makefile
+cd src
+make
+cd ..
 
 chmod 775 configs.cf
 chmod 775 cfg_files/maker_exe.ctl
