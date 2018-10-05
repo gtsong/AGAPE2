@@ -185,13 +185,28 @@ sudo make install
 cd ..
 mv -f samtools-1.3 programs/samtools-1.3
 
-# augustus (before running, you have to change some Makefile, if not error happen, but it does work. check INSTALL)
+# augustus (before running, you have to change some Makefile. you should change if directory not matched)
 tar xvzf augustus.current.tar.gz
-# cd augustus-3.3.1
-# make
-# cd src
-# make
-# cd ../..
+
+sed -i '10 a BAMTOOLS=/usr/local' augustus-3.3.1/auxprogs/bam2hints/Makefile
+sed -i '12 s/\/usr/$(BAMTOOLS)/g' augustus-3.3.1/auxprogs/bam2hints/Makefile
+sed -i '13 s/-lbamtools -lz/$(BAMTOOLS)\/lib\/libbamtools.a -lz/g' augustus-3.3.1/auxprogs/bam2hints/Makefile
+
+sed -i '11 s/include\/bamtools/local/g' augustus-3.3.1/auxprogs/filterBam/src/Makefile
+sed -i '12 s/-I$(BAMTOOLS)/-I$(BAMTOOLS)\/include\/bamtools/g' augustus-3.3.1/auxprogs/filterBam/src/Makefile
+sed -i '13 s/-lbamtools -lz/$(BAMTOOLS)\/lib\/libbamtools.a -lz/g' augustus-3.3.1/auxprogs/filterBam/src/Makefile
+
+sed -i '10 s/$(HOME)\/tools/\/home\/ubuntu\/AGAPE2\/programs/g' augustus-3.3.1/auxprogs/bam2wig/Makefile
+sed -i '18 s/samtools/samtools-1.3/g' augustus-3.3.1/auxprogs/bam2wig/Makefile
+sed -i '19 s/htslib/htslib-1.3/g' augustus-3.3.1/auxprogs/bam2wig/Makefile
+
+cd augustus-3.3.1
+make
+cd src
+make
+cd ..
+sudo make install
+cd ..
 mv -f augustus-3.3.1 programs/augustus
 
 # maker [Error happen, but doesn't matter]
