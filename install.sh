@@ -223,7 +223,7 @@ perl ./configure <<END_OF_RESPONSES
 Y
 5
 END_OF_RESPONSES
-
+cd ..
 mv -f RepeatMasker programs/RepeatMasker
 
 # maker [Error happen, but doesn't matter]
