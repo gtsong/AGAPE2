@@ -221,6 +221,7 @@ perl ./configure <<END_OF_RESPONSES
 2
 /usr/bin
 Y
+5
 END_OF_RESPONSES
 
 mv -f RepeatMasker programs/RepeatMasker
