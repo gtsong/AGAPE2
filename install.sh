@@ -53,7 +53,6 @@ sudo apt-get install -y postgresql
 sudo apt-get install -y dos2unix
 
 wget http://hgwdev.cse.ucsc.edu/~kent/exe/linux/axtChainNet.zip
-wget http://bioinf.uni-greifswald.de/augustus/binaries/augustus.current.tar.gz
 wget http://www.repeatmasker.org/RepeatMasker-open-4-0-7.tar.gz
 wget ftp://ftp.ncbi.nlm.nih.gov/blast/executables/rmblast/2.2.28/ncbi-rmblastn-2.2.28-x64-linux.tar.gz
 wget http://tandem.bu.edu/trf/downloads/trf409.linux64
@@ -72,6 +71,7 @@ git clone https://github.com/pezmaster31/bamtools.git
 git clone https://github.com/madler/zlib.git
 git clone https://github.com/WardF/libbzip2.git
 git clone https://github.com/kobolabs/liblzma.git
+git clone https://github.com/Gaius-Augustus/Augustus.git
 
 mv -f quota-alignment/ programs
 mv programs/*.py programs/quota-alignment/scripts/
@@ -187,33 +187,42 @@ cd ..
 mv -f samtools-1.3 programs/samtools-1.3
 
 # augustus (before running, you have to change three Makefiles. you should change it if directory does not matched )
-tar xvzf augustus.current.tar.gz
+sed -i '10 a BAMTOOLS=/usr/local' Augustus/auxprogs/bam2hints/Makefile
+sed -i '12 s/\/usr/$(BAMTOOLS)/g' Augustus/auxprogs/bam2hints/Makefile
+sed -i '13 s/-lbamtools -lz/$(BAMTOOLS)\/lib\/libbamtools.a -lz/g' Augustus/auxprogs/bam2hints/Makefile
 
-sed -i '10 a BAMTOOLS=/usr/local' augustus-3.3.1/auxprogs/bam2hints/Makefile
-sed -i '12 s/\/usr/$(BAMTOOLS)/g' augustus-3.3.1/auxprogs/bam2hints/Makefile
-sed -i '13 s/-lbamtools -lz/$(BAMTOOLS)\/lib\/libbamtools.a -lz/g' augustus-3.3.1/auxprogs/bam2hints/Makefile
+sed -i '11 s/include\/bamtools/local/g' Augustus/auxprogs/filterBam/src/Makefile
+sed -i '12 s/-I$(BAMTOOLS)/-I$(BAMTOOLS)\/include\/bamtools/g' Augustus/auxprogs/filterBam/src/Makefile
+sed -i '13 s/-lbamtools -lz/$(BAMTOOLS)\/lib\/libbamtools.a -lz/g' Augustus/auxprogs/filterBam/src/Makefile
 
-sed -i '11 s/include\/bamtools/local/g' augustus-3.3.1/auxprogs/filterBam/src/Makefile
-sed -i '12 s/-I$(BAMTOOLS)/-I$(BAMTOOLS)\/include\/bamtools/g' augustus-3.3.1/auxprogs/filterBam/src/Makefile
-sed -i '13 s/-lbamtools -lz/$(BAMTOOLS)\/lib\/libbamtools.a -lz/g' augustus-3.3.1/auxprogs/filterBam/src/Makefile
+sed -i '10 s/$(HOME)\/tools/\/home\/ubuntu\/AGAPE2\/programs/g' Augustus/auxprogs/bam2wig/Makefile
+sed -i '18 s/samtools/samtools-1.3/g' Augustus/auxprogs/bam2wig/Makefile
+sed -i '19 s/htslib/htslib-1.3/g' Augustus/auxprogs/bam2wig/Makefile
 
-sed -i '10 s/$(HOME)\/tools/\/home\/ubuntu\/AGAPE2\/programs/g' augustus-3.3.1/auxprogs/bam2wig/Makefile
-sed -i '18 s/samtools/samtools-1.3/g' augustus-3.3.1/auxprogs/bam2wig/Makefile
-sed -i '19 s/htslib/htslib-1.3/g' augustus-3.3.1/auxprogs/bam2wig/Makefile
-
-cd augustus-3.3.1
+cd Augustus
 make
 cd src
 make
 cd ..
 sudo make install
 cd ..
-mv -f augustus-3.3.1 programs/augustus
+mv -f Augustus programs/augustus
 
 # RepeatMasker installation
 # Check INSTALL file to complete installation
 tar xvzf RepeatMasker-open-4-0-7.tar.gz
 sudo cp -r RepeatMasker /usr/local/RepeatMasker
+cd RepeatMasker
+perl ./configure <<END_OF_RESPONSES
+
+
+
+/usr/local/bin/trf409.linux64
+2
+/usr/bin
+Y
+END_OF_RESPONSES
+
 mv -f RepeatMasker programs/RepeatMasker
 
 # maker [Error happen, but doesn't matter]
