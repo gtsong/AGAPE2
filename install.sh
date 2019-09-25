@@ -11,6 +11,7 @@ sudo apt-get install -y cpanminus
 sudo apt-get install -y unzip
 sudo apt-get install -y g++
 sudo apt-get install -y make
+sudo apt-get install -y wget
 sudo apt-get install -y python-pip
 sudo apt-get install -y python-biopython
 sudo apt-get install -y python-setuptools
