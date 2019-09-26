@@ -51,6 +51,7 @@ sudo apt-get install -y libpq-dev
 sudo apt-get install -y libdbd-pg-perl
 sudo apt-get install -y postgresql
 sudo apt-get install -y dos2unix
+sudo apt-get install -y expect
 
 wget http://hgwdev.cse.ucsc.edu/~kent/exe/linux/axtChainNet.zip
 wget http://www.repeatmasker.org/RepeatMasker-open-4-0-7.tar.gz
