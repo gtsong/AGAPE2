@@ -8,7 +8,7 @@ expect eof
 expect "*/usr/bin/perl ]:"
 send "\n"
 expect eof
-expect "*/home/AGAPE2/RepeatMasker ]:"
+expect "*RepeatMasker ]:"
 send "\n"
 expect eof
 expect "*]:"
