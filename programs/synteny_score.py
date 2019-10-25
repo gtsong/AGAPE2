@@ -226,14 +226,15 @@ def batch_query(qbed, sbed, qorder, sorder, all_data, options, c=None, transpose
                 left_dist = abs(anchor_pos - left_pos) if anchor_chr==left_chr else 0
                 right_dist = abs(anchor_pos - right_pos) if anchor_chr==right_chr else 0
                 flank_dist = (max(left_dist, right_dist) / 10000 + 1) * 10000
-                data = [query, anchor, gray, score, flank_dist, orientation]
-                if data[0].find('|') != -1:
-                    genes = data[0].split('|')
+                information = [query, anchor, gray, score, flank_dist, orientation]
+                if information[0].find('|') != -1:
+                    genes = information[0].split('|')
                     gene1 , gene2 = genes[0] , genes[1].split('_')[0]
-
                     an_i, an = sorder[anchor]
-                    index, strValue = qorder[data[0]]
+                    index, strValue = qorder[information[0]]
                     paralogItem = qbed.__getitem__(index)
+                    cntPara=cntPara+1
+                    q1_i, q2_i = 0 , 0
                     try:
                         q1_i, q1 = sorder[gene1]
                     except:
@@ -242,11 +243,9 @@ def batch_query(qbed, sbed, qorder, sorder, all_data, options, c=None, transpose
                             paralogItem.__setattr__("accn", gene2)
                             chkPara = chkPara + 1
                             paralist.append(paralogItem)
-		   	    print('find gene {}'.format(gene2))
-			    print('can not find gene {}'.format(gene1))
                         except:
-                            print('can not find gene in reference {}'.format(gene1))
-                            print('can not find gene in reference {}'.format(gene2))
+                            pass
+                        continue
                     try:
                         q2_i, q2 = sorder[gene2]
                     except:
@@ -255,17 +254,11 @@ def batch_query(qbed, sbed, qorder, sorder, all_data, options, c=None, transpose
                             paralogItem.__setattr__("accn", gene1)
                             chkPara = chkPara + 1
                             paralist.append(paralogItem)
-			    print('find gene {}'.format(gene1))
-                            print('can not find gene {}'.format(gene2))
                         except:
-			    
-			    print('can not find gene in reference {}'.format(gene1))
-                            print('can not find gene in reference {}'.format(gene2))
-
+                            pass
+                        continue
                     lenOfGene1 , lenOfGene2 = abs(an_i-q1_i), abs(an_i-q2_i)
                     width = 10
-                    cntPara = cntPara + 1
-
                     if (lenOfGene1 > width and lenOfGene2 <= width):
                         paralogItem.__setattr__("accn", gene2)
                         chkPara = chkPara + 1
@@ -274,11 +267,18 @@ def batch_query(qbed, sbed, qorder, sorder, all_data, options, c=None, transpose
                         paralogItem.__setattr__("accn", gene1)
                         chkPara = chkPara + 1
                         paralist.append(paralogItem)
+                    elif (lenOfGene1 <= width and lenOfGene2 <= width):
+                        geneSelect = gene2 if lenOfGene1 > lenOfGene2 else gene1
+                        paralogItem.__setattr__("accn",geneSelect)
+                        chkPara = chkPara + 1
+                        paralist.append(paralogItem)
                     else:
+                        print(information,lenOfGene1,lenOfGene2)
                         continue
 
 
     print("countOfParalogus : %d \t correctedParalogus : %d" % (cntPara, chkPara))
+
 
 def build_order(qbed_file, sbed_file):
     print(sys.stderr, "Read annotation files %s and %s" % (qbed_file, sbed_file))
