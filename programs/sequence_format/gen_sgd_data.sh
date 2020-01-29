@@ -1,11 +1,10 @@
 #!/bin/sh -l
 
-utils_dir=/home/ubuntu/AGAPE2/programs/sequence_format/utils.d
-
 strain_name=$1
 out_dir=$2
 fasta=$3
 gff_file=$4
+utils_dir=$5/utils.d
 
 temp_dir=$out_dir/temp
 mkdir -p $temp_dir
