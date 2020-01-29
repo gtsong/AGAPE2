@@ -45,7 +45,7 @@ def transposed(data):
     return zip(y, x)
 
 
-def get_flanker(group, query): #flank = 측면
+def get_flanker(group, query):
     """
     >>> get_flanker([(370, 15184), (372, 15178), (373, 15176), (400, 15193)],  385)
     ((373, 15176), (400, 15193), True)
@@ -198,6 +198,7 @@ def batch_query(qbed, sbed, qorder, sorder, all_data, options, c=None, transpose
     all_data.sort()
     simple_bed = lambda x: (sbed[x].seqid, sbed[x].start)
     cntPara, chkPara = 0, 0
+    countof = 0
     paralist = []
     for seqid, ranks in itertools.groupby(qbed.get_simple_bed(), key=lambda x: x[0]):
         ranks = [x[1] for x in ranks]
@@ -221,13 +222,14 @@ def batch_query(qbed, sbed, qorder, sorder, all_data, options, c=None, transpose
                 right_chr, right_pos = simple_bed(right)
                 anchor = sbedlift[syntelog].accn if lift_update else sbed[syntelog].accn
                 anchor_chr, anchor_pos = simple_bed(syntelog)
-
                 # below is useful for generating the syntenic region in the coge url
                 left_dist = abs(anchor_pos - left_pos) if anchor_chr==left_chr else 0
                 right_dist = abs(anchor_pos - right_pos) if anchor_chr==right_chr else 0
                 flank_dist = (max(left_dist, right_dist) / 10000 + 1) * 10000
                 information = [query, anchor, gray, score, flank_dist, orientation]
+                width = options.width
                 if information[0].find('|') != -1:
+                    countof += 1
                     genes = information[0].split('|')
                     gene1 , gene2 = genes[0] , genes[1].split('_')[0]
                     an_i, an = sorder[anchor]
@@ -240,9 +242,15 @@ def batch_query(qbed, sbed, qorder, sorder, all_data, options, c=None, transpose
                     except:
                         try:
                             q2_i, q2 = sorder[gene2]
-                            paralogItem.__setattr__("accn", gene2)
-                            chkPara = chkPara + 1
-                            paralist.append(paralogItem)
+                            lenOfGene2 = abs(an_i-q2_i)
+                            if lenOfGene2 <= width:
+                                print(paralogItem,)
+                                paralogItem.__setattr__("accn", gene2)
+                                chkPara = chkPara + 1
+                                paralist.append(paralogItem)
+                                print(paralogItem,lenOfGene2,anchor)
+                            else:
+                                continue
                         except:
                             pass
                         continue
@@ -251,34 +259,36 @@ def batch_query(qbed, sbed, qorder, sorder, all_data, options, c=None, transpose
                     except:
                         try:
                             q1_i, q1 = sorder[gene1]
-                            paralogItem.__setattr__("accn", gene1)
-                            chkPara = chkPara + 1
-                            paralist.append(paralogItem)
+                            lenOfGene1 = abs(an_i-q1_i)
+                            if lenOfGene1 <= width:
+                                print(paralogItem),
+                                paralogItem.__setattr__("accn", gene1)
+                                chkPara = chkPara + 1
+                                paralist.append(paralogItem)
+                                print(paralogItem,lenOfGene1,anchor)
+                            else:
+                                continue
                         except:
                             pass
                         continue
                     lenOfGene1 , lenOfGene2 = abs(an_i-q1_i), abs(an_i-q2_i)
-                    width = 10
-                    if (lenOfGene1 > width and lenOfGene2 <= width):
+                    if ((lenOfGene1 > width and lenOfGene2 <= width) or (lenOfGene1 == 0)):
+                        print(paralogItem),
                         paralogItem.__setattr__("accn", gene2)
                         chkPara = chkPara + 1
                         paralist.append(paralogItem)
-                    elif (lenOfGene1 <= width and lenOfGene2 > width):
+                        print(paralogItem,lenOfGene1,lenOfGene2,anchor)
+                    elif ((lenOfGene1 <= width and lenOfGene2 > width) or (lenOfGene2== 0)):
+                        print(paralogItem),
                         paralogItem.__setattr__("accn", gene1)
                         chkPara = chkPara + 1
                         paralist.append(paralogItem)
-                    elif (lenOfGene1 <= width and lenOfGene2 <= width):
-                        geneSelect = gene2 if lenOfGene1 > lenOfGene2 else gene1
-                        paralogItem.__setattr__("accn",geneSelect)
-                        chkPara = chkPara + 1
-                        paralist.append(paralogItem)
+                        print(paralogItem,lenOfGene1,lenOfGene2,anchor)
                     else:
-                        print(information,lenOfGene1,lenOfGene2)
+                        print(information,lenOfGene1,lenOfGene2,anchor)
                         continue
-
-
+    print(countof)
     print("countOfParalogus : %d \t correctedParalogus : %d" % (cntPara, chkPara))
-
 
 def build_order(qbed_file, sbed_file):
     print(sys.stderr, "Read annotation files %s and %s" % (qbed_file, sbed_file))
@@ -353,7 +363,7 @@ def main(blast_file, opts, cmd):
     batch_query(qbed, sbed, qorder, sorder, all_data, options, c=c, transpose=False, lift=lift)
     a = opts.qbed
 
-    file = open(a+'_corrected','w')
+    file = open(a,'w')
     qbedlen = qbed.__len__()
     for index in range(qbedlen):
         item = qbed.__getitem__(index)
@@ -366,6 +376,7 @@ if __name__ == '__main__':
     parser = optparse.OptionParser(__doc__, version="%prog {0}".format(__version__))
     parser.add_option("--qbed", dest="qbed", help="path to qbed")
     parser.add_option("--sbed", dest="sbed", help="path to sbed")
+    parser.add_option("--width", dest="width", type="int", default=10, help="synteny width size [default: %default]")
 
     coge_group = optparse.OptionGroup(parser, "CoGe-specific options")
     coge_group.add_option("--qnote", dest="qnote", default="null", help="query dataset group id")
@@ -395,5 +406,3 @@ if __name__ == '__main__':
 
     cmd = " ".join(sys.argv)
     main(blast_files[0], options, cmd)
-
-
