@@ -12,7 +12,7 @@ def roman2int2(roman):
 
 def read_gff(gff_file):
     fp = open(gff_file,'r')
-    gffs = sorted([line.split(' ') for line in fp], key=lambda x: (roman2int2(x[0].split('r')[1]),int(x[3]))))
+    gffs = sorted([line.split(' ') for line in fp], key=lambda x: (roman2int2(x[0].split('r')[1]), int(x[3])))
     return gffs
 
 def write_gff(all_data):
