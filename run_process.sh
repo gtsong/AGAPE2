@@ -1,4 +1,4 @@
-#/bin/sh
+#/bin/bash
 
 strain_name=$1
 out_dir=$2
