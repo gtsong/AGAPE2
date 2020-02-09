@@ -140,8 +140,11 @@ def main(gff_file,ref_file,ref_fasta):
         li = new_line.split(' ')
         if li[2] == 'gene':
             if flag is True :
-                cntFlag,li_list = curation(li_list, gene_list, cds_list, fasta_list, ref_list, chkCnt, cds_l, cds_r)
-                cnt = cnt +1 if cntFlag is True else cnt
+                if (int(gene_list[4])-int(gene_list[3])) == (int(cds_r)-int(cds_l)):
+                    cnt = cnt + 1
+                else:
+                    cntFlag,li_list = curation(li_list, gene_list, cds_list, fasta_list, ref_list, chkCnt, cds_l, cds_r)
+                    cnt = cnt + 1 if cntFlag else cnt
                 print_list(li_list)
                 flag = False
             if check is True:
