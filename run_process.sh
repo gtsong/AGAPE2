@@ -1,4 +1,4 @@
-#/bin/bash
+#/bin/sh
 
 strain_name=$1
 out_dir=$2
@@ -31,9 +31,11 @@ $QUOTA/scripts/gff_to_bed.py $strain_name.conv.gff > $strain_name.bed
 $QUOTA/scripts/gff_to_bed.py $REF_NAME.gff > $REF_NAME.bed
 $QUOTA/scripts/blast_to_raw.py $strain_name.blastp --qbed $strain_name.bed --sbed $REF_NAME.bed --filter_repeats --write-filtered-blast > $strain_name.blast.raw
 
-for ((wid=5;wid<=$width;wid=wid+5));
+wid=5
+while [ $wid -le $width ];
 do
-  $QUOTA/scripts/synteny_score.py $strain_name.blast.raw --qbed $strain_name.bed --sbed $REF_NAME.bed --width $wid
+  $QUOTA/scripts/synteny_score.py $strain_name.blast.raw --qbed $strain_name.bed --sbed $REF_NAME.bed --width $wid;
+  wid=$((wid+5));
 done
 
 $QUOTA/scripts/bed_to_gff.py $comb_annot/gff/$strain_name.gff.sorted.rmdup $strain_name.bed
