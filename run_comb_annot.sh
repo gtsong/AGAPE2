@@ -35,7 +35,7 @@ $BIN/conv_scf_pos $comb_annot/head.txt $comb_annot/add1.genes.gff > $comb_annot/
 
 echo "#" > $comb_annot/$out_name.codex
 mkdir -p $comb_annot/more_annot
-$SCRIPTS/combined_annot.sh $out_name $comb_annot/more_annot $maker_dir/seq.fasta $comb_annot $comb_annot $snap_dir $SCRIPTS ENSEMBL 50 $comb_annot # results in $comb_annot/more_annot/gff/$out_name.genes.gff
+$SCRIPTS/combined_annot.sh $out_name $comb_annot/more_annot $maker_dir/seq.fasta $comb_annot $comb_annot $snap_dir $SCRIPTS ENSEMBL 80 $comb_annot # results in $comb_annot/more_annot/gff/$out_name.genes.gff
 less $comb_annot/more_annot/gff/$out_name.genes.gff >> $comb_annot/gff/$out_name.genes.gff
 less $comb_annot/more_annot/blast_out/$out_name.blastx.out >> $comb_annot/blast_out/$out_name.blastx.out
 #rm -rf $comb_annot/more_annot
