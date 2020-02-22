@@ -46,5 +46,5 @@ mkdir -p $comb_annot
 cd $comb_annot
 $SCRIPTS/run_comb_annot.sh $comb_annot $BLAST $out_name $maker_dir $out_dir $snap_dir $SCRIPTS
 $SCRIPTS/final_annot.sh $out_dir/maker/seq.fasta $comb_annot/gff/$out_name.genes.gff $comb_annot $out_name $SCRIPTS 
-$SCRIPTS/sort_gff_rmdup_byChrom.py $comb_annot/gff/$out_name.gff
+$SCRIPTS/sort_gff_rmdup_byChrom.py $comb_annot/gff $out_name
 $SCRIPTS/run_process.sh $out_name $out_dir $seq $SCRIPTS
