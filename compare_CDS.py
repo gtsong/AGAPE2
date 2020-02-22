@@ -1,6 +1,5 @@
 #!/usr/bin/env python
 import sys
-from functools import reduce
 
 PLUS_START_CODON, MINUS_START_CODON = "ATG", "CAT"
 
