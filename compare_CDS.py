@@ -3,14 +3,16 @@ import sys
 from functools import reduce
 
 PLUS_START_CODON, MINUS_START_CODON = "ATG", "CAT"
- 
-def roman2int2(roman):
-    def getdv(r):
-        pos = 'IVXLCDMF'.find(r)
-        return 0 if pos < 0 else 10**(pos/2)*(1+(4*(pos%2)))
-    v = map(getdv, roman)
 
-    return reduce(lambda s,x: s+x[0] if x[0]>=x[1] else s-x[0], zip(v, v[1:]+[0]),0)
+scf_list=[]
+
+def checkIndex(chrom):
+    global scf_list
+    count = 0
+    for i in scf_list:
+        if chrom == i:
+            return count
+        count += 1
 
 def getRefGff(ref_file):
     f1 = open(ref_file, 'r')
@@ -31,7 +33,7 @@ def getRefGff(ref_file):
 
     return ref_list
 
-def getRefFasta(ref_fasta):
+def getFasta(ref_fasta):
     f1 = open(ref_fasta, 'r')
     fasta_list, tmp_list, tmp_str = [], [], ''
     for line in f1:
@@ -67,7 +69,7 @@ def curation(li_info, gene_info, cds_info, fasta_info, ref_info, check_cnt, cds_
 
 def correction(li_info, gene_info, cds_info, fasta_info, reference_cds_count):
     chr_n, cds_l, cds_r, direction = cds_info[0], int(cds_info[1]), int(cds_info[2]), cds_info[3]
-    index = roman2int2(chr_n)-1 if chr_n != 'chrM' else 16
+    index = checkIndex(chr_n)
     ref_length, cds_length, tmp_length = int(gene_info[4])-int(gene_info[3])+1, cds_r - cds_l + 1, 6
     match_flag, fasta_list = False, fasta_info[index][1]
     diff_norm, new_position, limit =  abs(ref_length-cds_length), 0, ref_length + (ref_length/5) # 20%
@@ -127,12 +129,17 @@ def correction(li_info, gene_info, cds_info, fasta_info, reference_cds_count):
 def print_list(li_info):
     for it in li_info:
          print(it)
-def main(gff_file,ref_file,ref_fasta):
 
-    fasta_list = getRefFasta(ref_fasta)
+def main(gff_file, ref_file, input_fasta, scf_name):
+
+    fasta_list = getFasta(input_fasta)
     ref_list = getRefGff(ref_file)
     gene_list, li_list, cds_list = [], [], []
     check, flag, chrName, direction, cds_l, cds_r, cnt, chkCnt = False, False, '', '', 0, 0, 0, 0
+    fp = open(scf_name, 'r')
+    for line in fp:
+        scf_list.append(line.replace('\n',''))
+    fp.close()
 
     f1 = open(gff_file, 'r')
     for line in f1:
@@ -174,5 +181,6 @@ def main(gff_file,ref_file,ref_fasta):
 if __name__ == '__main__':
     gff_file = sys.argv[1]
     ref_file = sys.argv[2]
-    ref_fasta = sys.argv[3]
-    main(gff_file,ref_file,ref_fasta)
+    input_fasta = sys.argv[3]
+    scf_name = sys.argv[4]
+    main(gff_file, ref_file, input_fasta, scf_name)
