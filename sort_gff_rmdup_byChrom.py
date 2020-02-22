@@ -101,7 +101,10 @@ def main(gff_file):
     write_gff_with_rm_dup(sorted_gff, gff_file)
 
 if __name__ == '__main__':
-    gff_file = sys.argv[1]
-    os.system('mkdir temp')
-    os.chdir('temp')
+    gff_dir = sys.argv[1]
+    strain_name = sys.argv[2]
+    gff_file = gff_dir+"/"+strain_name+".gff"
+    os.system('mkdir ' +gff_dir+'/temp')
+    os.chdir(gff_dir + '/temp')
     main(gff_file)
+
